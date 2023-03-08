@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="https://freepngimg.com/thumb/book/37234-9-book-clipart.png"
+      sizes="16x16 24x24 32x32 48x48"/>
+    <link rel="stylesheet" href="style.css">
+    <title>Ice & Fire</title>
+  </head>
+  <body>
+
+    <div class="container">
+    <h1>"Books on Games of Thrones"</h1>
+    </div>
+
+    <div>
+      <input id="search" onkeyup="handleSearch(this);" placeholder="Priority search..."/>
+    </div>
+
+    <div class="Books-container" id="Books-container"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+
+
+////////////
+////css/////
+
+
+
+body {
+    background-image: linear-gradient(to right, #8f88a6, #fbf6fb);
+}
+
+.container{
+  display: flex;
+  justify-content: center;
+}
+
+.Books-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    width: 400px;
+    min-height: 250px;
+    background-image: linear-gradient(to right, #87a681, #927175);
+    border-radius: 10px;
+    margin: 50px;
+    justify-content: center;
+  }
+
+  .search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }  
+
+#search {
+  width: 275px;
+  height: 20px;
+  border-radius: 10px;
+  /* box-shadow: 0px 0px 5px rgba(21, 30, 151, 0.5); */
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  display: flex;
+  justify-content: center;
+}
+
+.card-text {
+  text-align: center;
+}
+
+.card h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 1;
+  }
+  
+  .card p {
+    font-size: 1rem;
+    margin: 10px 0;
+  }
+  
+  .card label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  
+  ////////////
+////////js////
+////////////
+
+const uri = "https://www.anapioficeandfire.com/api/books?pageSize=50";
+const bookscontainer = document.getElementById("Books-container");
+const searchInput = document.getElementById("search");
+let book = [];
+
+function handleSearch(target) {
+  const search = target.value.toLowerCase();
+  const searchMatch = book.filter((element) => {
+    const name = element.name.toLowerCase();
+    return name.includes(search);
+  });
+  renderCards(searchMatch);
+}
+
+async function fetchData() {
+  const response = await fetch(uri);
+  const data = await response.json();
+  if (data.length > 0) {
+    book = [...data];
+    renderCards(book);
+  }
+}
+fetchData();
+
+function renderCards(data = []) {
+  let cards = [];
+  for (let i = 0; i < 50 && i < data.length; i++) {
+    cards.push(createCard(data[i]));
+  }
+  bookscontainer.innerHTML = "";
+  bookscontainer.append(...cards);
+}
+
+function createCard(data = {}) {
+  let card = document.createElement("div");
+  let title = document.createElement("h3");
+  let subHeading1 = document.createElement("p");
+  let subHeading2 = document.createElement("p");
+  let subHeading3 = document.createElement("p");
+  let subHeading4 = document.createElement("p");
+  let subHeading5 = document.createElement("p");
+  card.setAttribute("class", "card");
+ 
+  const { name = "", isbn = "", authors = "", publisher = "", released = "", numberOfPages = "" } = data;
+  
+  title.innerText = name;
+  const a = document.createElement("h3");
+  const b = document.createTextNode("Title :")
+            const c = document.createTextNode(" ")
+            a.append(b,c,title.innerText);
+            card.append(a);
+
+  subHeading1.innerText = isbn;
+  const a1 = document.createElement("p");
+  const b1 = document.createTextNode("ISBN :")
+            const c1 = document.createTextNode(" ")
+            a1.append(b1,c1,subHeading1.innerText);
+            card.append(a1);
+  
+  subHeading2.innerText = authors;
+  const a2 = document.createElement("p");
+  const b2 = document.createTextNode("Author :")
+            const c2 = document.createTextNode(" ")
+            a2.append(b2,c2,subHeading2.innerText);
+            card.append(a2);
+  
+  subHeading3.innerText = publisher;
+  const a3 = document.createElement("p");
+  const b3 = document.createTextNode("Publisher :")
+            const c3 = document.createTextNode(" ")
+            a3.append(b3,c3,subHeading3.innerText);
+            card.append(a3);
+  
+  subHeading4.innerText = released;
+  const a4 = document.createElement("p");
+  const b4 = document.createTextNode("Released Date :")
+            const c4 = document.createTextNode(" ")
+            a4.append(b4,c4,subHeading4.innerText);
+            card.append(a4);
+
+  subHeading5.innerText = numberOfPages;
+  const a5 = document.createElement("p");
+  const b5 = document.createTextNode("Number Of Pages :")
+            const c5 = document.createTextNode(" ")
+            a5.append(b5,c5,subHeading5.innerText);
+            card.append(a5);
+
+  return card;
+}
+
+
+//const uri = "https://www.anapioficeandfire.com/api/books?pageSize=50";
+// const bookscontainer = document.getElementById("Books-container");
+// const searchInput = document.getElementById("search");
+// let book = [];
+
+// function handleSearch(target) {
+//   const search = target.value.toLowerCase();
+//   const searchMatch = book.filter((element) => {
+//     const name = element.name.toLowerCase();
+//     return name.includes(search);
+//   });
+//   renderCards(searchMatch);
+// }
+
+// async function fetchData() {
+//   const response = await fetch(uri);
+//   const data = await response.json();
+//   if (data.length > 0) {
+//     book = [...data];
+//     renderCards(book);
+//   }
+// }
+// fetchData();
+// function renderCards(data = []) {
+//   let cards = [];
+//   for (let i = 0; i < 50 && i < data.length; i++) {
+//     cards.push(createCard(data[i]));
+//   }
+//   bookscontainer.innerHTML = "";
+//   bookscontainer.append(...cards);
+// }
+
+// function createCard(data = {}) {
+//   let card = document.createElement("div");
+//   let title = document.createElement("h3");
+//   let subHeading1 = document.createElement("p");
+//   let subHeading2 = document.createElement("p");
+//   let subHeading3 = document.createElement("p");
+//   let subHeading4 = document.createElement("p");
+//   let subHeading5 = document.createElement("p");
+//   card.setAttribute("class", "card");
+ 
+//   const { name = "", isbn = "", authors = "", publisher = "", released = "", numberOfPages = "" } = data;
+  
+//   title.innerText = name;
+//   const a = document.createElement("h3");
+//   const b = document.createTextNode("Title :")
+//             const c = document.createTextNode(" ")
+//             a.append(b,c,title.innerText);
+//             card.append(a);
+
+//   subHeading1.innerText = isbn;
+//   const a1 = document.createElement("p");
+//   const b1 = document.createTextNode("ISBN :")
+//             const c1 = document.createTextNode(" ")
+//             a1.append(b1,c1,subHeading1.innerText);
+//             card.append(a1);
+  
+//   subHeading2.innerText = authors;
+//   const a2 = document.createElement("p");
+//   const b2 = document.createTextNode("Author :")
+//             const c2 = document.createTextNode(" ")
+//             a2.append(b2,c2,subHeading2.innerText);
+//             card.append(a2);
+  
+//   subHeading3.innerText = publisher;
+//   const a3 = document.createElement("p");
+//   const b3 = document.createTextNode("Publisher :")
+//             const c3 = document.createTextNode(" ")
+//             a3.append(b3,c3,subHeading3.innerText);
+//             card.append(a3);
+  
+//   subHeading4.innerText = released;
+//   const a4 = document.createElement("p");
+//   const b4 = document.createTextNode("Released Date :")
+//             const c4 = document.createTextNode(" ")
+//             a4.append(b4,c4,subHeading4.innerText);
+//             card.append(a4);
+
+//   subHeading5.innerText = numberOfPages;
+//   const a5 = document.createElement("p");
+//   const b5 = document.createTextNode("Number Of Pages :")
+//             const c5 = document.createTextNode(" ")
+//             a5.append(b5,c5,subHeading5.innerText);
+//             card.append(a5);
+
+//   return card;
+// }
